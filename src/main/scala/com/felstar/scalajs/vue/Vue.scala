@@ -16,8 +16,8 @@ class Vue extends js.Object {
   val $el: raw.Element = js.native
   val $data: js.Dynamic = js.native
   val $options: js.Dynamic = js.native
-  val $parent: Vue = js.native
   val $root: Vue = js.native
+  val $parent: Vue = js.native
   val $children: js.Array[Vue] = js.native
   val $: js.Dynamic = js.native
   val $$: js.Dynamic = js.native

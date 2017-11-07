@@ -51,7 +51,7 @@
 
 			<transition-group name="fade" tag="ol">
 
-			<li v-for="(todo,index) in todos" :key="todo"><span
+			<li v-for="(todo,index) in todos" :key="index"><span
 				@click="todo.done = !todo.done" :class="{done: todo.done}">
 					{{todo.content}}
 					<button @click="remove(index)">Remove</button>
@@ -59,12 +59,12 @@
 
 			</transition-group>
 
-			Tasks# {{todos.length}}<br /> N={{n}}<br />
+			Tasks# {{todos.length}}<br /> N={{number}}<br />
 
 		</div>
 		<div
 			style="padding-left: 30px; height: 400px; overflow: auto; width: 30%">
-			<pre>data JSON: {{$data}}</pre>
+			<pre>data: {{$data}}</pre>
 		</div>
 
 		<div style="clear: left">
@@ -74,33 +74,35 @@
 					@click="barValue += 50" /> <input type="button" value="-"
 					@click="barValue -= 50">
 			</div>
-			<div class="bar" :style="{ width: barValue + 'px' }"></div>
+			<div class="bar" v-bind:style="{ width: barValue + 'px' }"></div>
 			<div
 				v-text="'Using a v-text directive with inline expression, title='+title"></div>
 			<div>Title reversed={{title | reverse}}</div>
 			<div>Title wrapper={{title | wrap('<<','>>')}}</div>
-			<div v-mydirective="title">xx</div>
-			<my-component my-msg="hello">Special content</my-component>
-			<!---->
-			<button @click="clickHandler">Call clickHandler in Scala</button>
-			<button @click="n++">Increment N</button>
-			<!---->
+
+			<div v-custom-directive="title">xx</div>
+			<custom-component my-msg="hello">text content</custom-component>
+
+			<button v-on:click="clickHandler">Call clickHandler in Scala
+				JS</button>
+			<button @click="number++">Increment N</button>
+
 			<button @click="addTask">Add Task</button>
 			<button @click="change1st">Change 1st</button>
 			<button @click="remove(0)">Remove 1st</button>
 			<button @click="flipAll">Flip All</button>
-			<BR /> <BR /> Todos computed: {{ todosComputed }}
+
+			<br /> <br /> Todos computed: {{ todosComputed }}
 		</div>
 	</div>
 
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js'></script>
 
-	<script
-		src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js'></script>
-
-	<script type="text/javascript" src="./META-INF/scala-js/run.js"></script>
+	<script type="text/javascript" src="./META-INF/resources/script/run.js"></script>
 
 	<script>
-		var demo = App.main();
+		// el=#demo
+		var demo = App.make("demo"); // DemoView
 		demo.todos.push(
 			{
 				done : false,

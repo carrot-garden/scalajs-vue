@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.carrotgarden.a</groupId>
 		<artifactId>carrot-a</artifactId>
-		<version>1-SNAPSHOT</version>
+		<version>0-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
@@ -18,7 +18,7 @@
 
 		<dependency>
 			<groupId>org.scala-js</groupId>
-			<artifactId>scalajs-dom_${projectScalaJsLibrary}</artifactId>
+			<artifactId>scalajs-dom_${version.sjs.lib}</artifactId>
 		</dependency>
 
 		<!-- <dependency> -->

@@ -38,39 +38,36 @@ object TodoApp extends {
   // we return the DemoVue so we can use it back in JS
   // could have returned raw Vue of course
   @JSExport
-  def main(): DemoVue = {
+  def make(el: String): DemoVue = {
 
     val tasks = js.Array("Learn JavaScript", "Learn Vue.js", "Learn Scala.js")
 
     def ts = new java.util.Date().toString
 
-    Vue.component("my-component", literal(
+    Vue.component("custom-component", literal(
       props = js.Array("myMsg"),
-      template = "<p>A custom component with msg {{myMsg}} <slot>default content</slot></p>")
+      template = "<p>A custom component with msg='{{myMsg}}' <slot>default content</slot></p>")
     //
     )
 
-    Vue.directive("mydirective", literal(
+    // provide directive
+    Vue.directive("custom-directive", literal(
       update = (el: HTMLElement, directive: Directive) =>
         {
           el.innerHTML =
-            "This comes from my-directive with contents " +
-              directive.value +
-              " and expression " +
-              directive.expression
-        } //
-    ) //
-    ) //
+            "This comes from 'custom-directive' with contents " +
+              directive.value + " and expression " + directive.expression
+        }))
 
-    val demo = new Vue(
+    val vue = new Vue(
       literal(
-        el = "#demo",
+        el = s"#$el",
         data = literal(
           message = "Hello Vue.js",
-          title = "Todo App",
+          title = "Todo App: [change me]",
           todos = tasks.map(content => literal(done = content == tasks.head, content = content)),
           barValue = 100,
-          n = 0), //,
+          number = 0), //,
         // js.ThisFunction would be fine, just trying to be more type specific
         methods = literal(
           clickHandler = ((demoVue: DemoVue) => demoVue.number -= 1): DemoVueMethod,
@@ -78,7 +75,8 @@ object TodoApp extends {
           change1st = ((demoVue: DemoVue) => Vue.set(demoVue.todos, 0, DemoVueTodo(false, ts))): DemoVueMethod,
           remove = ((demoVue: DemoVue, idx: Int) => Vue.delete(demoVue.todos, idx)): js.ThisFunction1[DemoVue, Int, _],
           flipAll = ((demoVue: DemoVue) => demoVue.todos.foreach(td => td.done = !td.done)): DemoVueMethod),
-        computed = literal(todosComputed = (demoVue: DemoVue) => demoVue.todos.map(_.content)),
+        computed = literal(
+          todosComputed = (demoVue: DemoVue) => demoVue.todos.map(_.content)),
         //
         filters = literal(
           reverse = ((value: js.Any) => value.toString.reverse),
@@ -91,9 +89,9 @@ object TodoApp extends {
     //
     )
 
-    demo.$watch("title", (newValue: String, oldValue: String) => println("changed " + newValue))
+    vue.$watch("title", (next: String, past: String) => println("changed: " + next))
 
-    val demoVue = demo.asInstanceOf[DemoVue]
+    val demoVue = vue.asInstanceOf[DemoVue]
 
     // filters declared above inline, can be also done as below
     //    Vue.filter("reverse", (value:js.Any)=>value.toString.reverse)
